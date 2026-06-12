@@ -1,4 +1,4 @@
 /**
- * Package for checking CI/CD pipeline
+ * Package for checking CI/CD pipeline.
  */
 package org.example;
