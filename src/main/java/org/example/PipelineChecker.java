@@ -5,7 +5,12 @@ package org.example;
  * Final for inheritance ban.
  */
 public final class PipelineChecker {
-    public static void main(String[] args) {
+    /**
+     * Main entry point of the application.
+     *
+     * @param args command line arguments
+     */
+    public static void main(final String[] args) {
         System.out.println("Pipeline is working");
     }
 
