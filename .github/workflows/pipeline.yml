@@ -1,0 +1,48 @@
+name: Java CI/CD Pipeline
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Code Analysis (Checkstyle)
+        run: mvn checkstyle:check
+
+      - name: Run Unit Tests
+        run: mvn test
+
+      - name: Build JAR package
+        run: mvn package -DskipTests
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-app-artifact
+          path: target/*.jar
+
+      - name: Build and Push Docker Image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker login ghcr.io -u ${{ github.actor }} -p $GITHUB_TOKEN
+          docker build -t ghcr.io/${{ github.repository }}/java-app:latest .
+          docker push ghcr.io/${{ github.repository }}/java-app:latest
