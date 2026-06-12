@@ -1,0 +1,1 @@
+rootProject.name = "Astashenkova_HW5Gradle"
